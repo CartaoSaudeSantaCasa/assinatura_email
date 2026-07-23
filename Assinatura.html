@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Gerador de Assinatura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  body { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #e0e0e0; font-family:'Inter',sans-serif; margin: 0; }
+  #btn-download { margin-top: 40px; padding: 14px 28px; background-color: #274070; color: #FFFFFF; border: 2px solid #C8A75A; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+  #btn-download:hover { background-color: #15173B; color: #C8A75A; }
+  #form-dados { background: #FFFFFF; padding: 26px 24px; border-radius: 8px; box-shadow: 0 4px 15px rgba(21, 23, 59, 0.2); margin-bottom: 25px; width: 550px; display: grid; gap: 10px; box-sizing: border-box; }
+  #form-dados input { padding: 12px; border: 1px solid #274070; border-radius: 4px; outline: none; font-family:'Inter',sans-serif; font-size: 14px; transition: 0.2s; }
+  #form-dados input:focus { border-color: #C8A75A; box-shadow: 0 0 5px rgba(247, 208, 89, 0.4); }
+</style>
+</head>
+<body>
+
+<!-- Formulário de Preenchimento -->
+<div id="form-dados">
+  <input type="text" id="in-nome" placeholder="Nome do Colaborador">
+  <input type="text" id="in-cargo" placeholder="Cargo Ocupado | Setor">
+  <input type="text" id="in-produto" placeholder="Produto Atendido" value="Cartão Saúde Santa Casa">
+  <input type="text" id="in-telefone" placeholder="Telefone (só números)">
+  <input type="text" id="in-email" placeholder="e-mail@empresa.com.br">
+  <input type="text" id="in-endereco" placeholder="Endereço" value="Sede Montes Claros - MG">
+</div>
+
+<table id="assinatura" cellpadding="0" cellspacing="0" border="0" style="width: 550px; background-color: #15173B; background-image: linear-gradient(135deg,#172445 0%,#233A67 100%); color: #FFFFFF; font-family:'Inter',sans-serif; padding: 20px 20px 20px 20px; border-radius: 8px;">
+  <tr>
+    <!-- Coluna Esquerda: Logos -->
+    <td style="width:38%; vertical-align: middle; text-align: center; padding-right: 20px; padding-right:24px; border-right: 1px solid rgba(200,167,90,.45);">
+      
+      <!-- Logo Principal -->
+      <img src="logos/logo_cs.png" alt="Logo Principal" style="width: 90%; height: auto; display: block; margin: 0 auto 10px auto;">
+      
+      <!-- Logo Secundária Unificada (Sem tabela extra e com proporção dinâmica) -->
+      <img src="logos/logo_sc_vs.png" alt="Logos Secundárias" style="width: 106%;padding-top: 20px; height: auto; display: block; margin: 0 auto;">
+      
+    </td>
+    
+    <!-- Coluna Direita: Informações -->
+    <td style="padding-left: 20px; vertical-align: middle; line-height: 1.75; font-size: 14px;">
+      <div id="sig-nome" style="font-size: 19px; font-weight: 700; letter-spacing:.2px; color:#D2B46C; margin-bottom: 6px;">Nome do Colaborador</div>
+<div style="
+width:60%;
+height:2px;
+background:#C8A75A;
+margin:6px 0 10px;
+border-radius:2px;
+"></div>
+      <div id="sig-cargo" style="color: #E4E8EE; font-size: 13px; font-weight: 500;">Cargo Ocupado | Setor</div>
+      <div id="sig-produto" style="color: #C9D2E3; font-size: 13px; font-weight: 500; margin-bottom: 14px; font-weight: bold;">Cartão Saúde Santa Casa</div>
+      <div style="color: #F2F5F7; font-size:13px; font-weight:400; margin-top: 5px; ">
+            <i class="fa-solid fa-phone" style="padding-right: 10px;"></i> <span id="sig-telefone">+55 (00) 00000-0000</span></div>
+      <div style="color: #F2F5F7; font-size:13px; font-weight:400; ">
+            <i class="fa-solid fa-envelope" style="padding-right: 10px;"></i> <span id="sig-email">e-mail@empresa.com.br</span></div>
+      <div style="color: #F2F5F7; font-size:13px; font-weight:400; ">
+            <i class="fa-solid fa-location-dot" style="padding-right: 10px;"></i> <span id="sig-endereco">Sede Montes Claros - MG</span></div>
+
+    </td>
+  </tr>
+</table>
+<!-- FIM DA ASSINATURA -->
+
+<button id="btn-download">Baixar Assinatura (.PNG)</button>
+
+<!-- Script sucinto para gerar o download em alta qualidade (escala 2x) -->
+<script>
+// Lógica de atualização em tempo real
+  const campos = ['nome', 'cargo', 'produto', 'telefone', 'email', 'endereco'];
+  campos.forEach(c => {
+    const input = document.getElementById(`in-${c}`);
+    const sig = document.getElementById(`sig-${c}`);
+    const textoPadrao = sig.innerText;
+    
+    if(input) {
+      input.addEventListener('input', (e) => {
+        let val = input.value;
+        
+        // Máscara de Telefone Ultra-leve
+        if (c === 'telefone') {
+          val = val.replace(/\D/g, '').substring(0, 11);
+          val = val.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{4,5})(\d{4})$/, '$1-$2');
+          input.value = val; 
+          val = val ? `+55 ${val}` : textoPadrao;
+        }
+        
+        sig.innerText = val || textoPadrao;
+      });
+    }
+  });
+html2canvas(document.getElementById("assinatura"), {
+    scale: 2,
+    backgroundColor: null,
+    useCORS: true
+})
+.then(canvas => {
+    const a = document.createElement("a");
+    a.download = "assinatura_email.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+});
+document.getElementById("btn-download").onclick = () => {
+
+    console.log("Clique detectado");
+
+    const assinatura = document.getElementById("assinatura");
+    console.log(assinatura);
+
+    html2canvas(assinatura, {
+        backgroundColor: null,
+        scale: 2
+    })
+    .then(canvas => {
+        console.log("Canvas criado");
+
+        const a = document.createElement("a");
+        a.download = "assinatura_email.png";
+        a.href = canvas.toDataURL("image/png");
+        a.click();
+    })
+    .catch(err => {
+        console.error(err);
+    });
+
+};
+</script>
+</body>
+</html>

@@ -55,11 +55,11 @@ border-radius:2px;
       <div id="sig-cargo" style="color: #E4E8EE; font-size: 13px; font-weight: 500;">Cargo Ocupado | Setor</div>
       <div id="sig-produto" style="color: #C9D2E3; font-size: 13px; font-weight: 500; margin-bottom: 14px; font-weight: bold;">Cartão Saúde Santa Casa</div>
       <div style="color: #F2F5F7; font-size:13px; font-weight:400; margin-top: 5px; ">
-            <i class="fa-solid fa-phone" style="padding-right: 10px;"></i> <span id="sig-telefone">(00) 00000-0000</span> | <span id="sig-telefone2">(00) 00000-0000</span></div>
+            <i class="fa-solid fa-phone" style="padding-right: 6px;"></i> <span id="sig-telefone">(00) 00000-0000</span> | <span id="sig-telefone2">(00) 00000-0000</span></div>
       <div style="color: #F2F5F7; font-size:13px; font-weight:400; word-break: break-all;">
-            <i class="fa-solid fa-envelope" style="padding-right: 10px;"></i> <span id="sig-email">e-mail@empresa.com.br</span></div>
+            <i class="fa-solid fa-envelope" style="padding-right: 6px;"></i> <span id="sig-email">e-mail@empresa.com.br</span></div>
       <div style="color: #F2F5F7; font-size:13px; font-weight:400; ">
-            <i class="fa-solid fa-location-dot" style="padding-right: 10px;"></i> <span id="sig-endereco">Sede Montes Claros - MG</span></div>
+            <i class="fa-solid fa-location-dot" style="padding-right: 6px;"></i> <span id="sig-endereco">Sede Montes Claros - MG</span></div>
 
     </td>
   </tr>
@@ -83,7 +83,7 @@ border-radius:2px;
           val = val.replace(/\D/g, '').substring(0, 11);
           val = val.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{4,5})(\d{4})$/, '$1-$2');
           input.value = val; 
-          val = val ? `+55 ${val}` : textoPadrao;
+          val = val ? `${val}` : textoPadrao;
         }
         
         sig.innerText = val || textoPadrao;

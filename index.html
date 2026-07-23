@@ -23,7 +23,8 @@
   <input type="text" id="in-nome" placeholder="Nome do Colaborador">
   <input type="text" id="in-cargo" placeholder="Cargo Ocupado | Setor">
   <input type="text" id="in-produto" placeholder="Produto Atendido" value="Cartão Saúde Santa Casa">
-  <input type="text" id="in-telefone" placeholder="Telefone (só números)">
+  <input type="text" id="in-telefone" placeholder="Telefone Principal (só números)">
+  <input type="text" id="in-telefone2" placeholder="Telefone Comercial (só números)" value="3832120000">
   <input type="text" id="in-email" placeholder="e-mail@empresa.com.br">
   <input type="text" id="in-endereco" placeholder="Endereço" value="Sede Montes Claros - MG">
 </div>
@@ -54,8 +55,8 @@ border-radius:2px;
       <div id="sig-cargo" style="color: #E4E8EE; font-size: 13px; font-weight: 500;">Cargo Ocupado | Setor</div>
       <div id="sig-produto" style="color: #C9D2E3; font-size: 13px; font-weight: 500; margin-bottom: 14px; font-weight: bold;">Cartão Saúde Santa Casa</div>
       <div style="color: #F2F5F7; font-size:13px; font-weight:400; margin-top: 5px; ">
-            <i class="fa-solid fa-phone" style="padding-right: 10px;"></i> <span id="sig-telefone">+55 (00) 00000-0000</span></div>
-      <div style="color: #F2F5F7; font-size:13px; font-weight:400; ">
+            <i class="fa-solid fa-phone" style="padding-right: 10px;"></i> <span id="sig-telefone">(00) 00000-0000</span> | <span id="sig-telefone2">(00) 00000-0000</span></div>
+      <div style="color: #F2F5F7; font-size:13px; font-weight:400; word-break: break-all;">
             <i class="fa-solid fa-envelope" style="padding-right: 10px;"></i> <span id="sig-email">e-mail@empresa.com.br</span></div>
       <div style="color: #F2F5F7; font-size:13px; font-weight:400; ">
             <i class="fa-solid fa-location-dot" style="padding-right: 10px;"></i> <span id="sig-endereco">Sede Montes Claros - MG</span></div>
@@ -63,25 +64,22 @@ border-radius:2px;
     </td>
   </tr>
 </table>
-<!-- FIM DA ASSINATURA -->
 
 <button id="btn-download">Baixar Assinatura (.PNG)</button>
-
-<!-- Script sucinto para gerar o download em alta qualidade (escala 2x) -->
 <script>
-// Lógica de atualização em tempo real
-  const campos = ['nome', 'cargo', 'produto', 'telefone', 'email', 'endereco'];
+  // Lógica de atualização em tempo real e Máscara
+  const campos = ['nome', 'cargo', 'produto', 'telefone', 'telefone2', 'email', 'endereco'];
   campos.forEach(c => {
     const input = document.getElementById(`in-${c}`);
     const sig = document.getElementById(`sig-${c}`);
     const textoPadrao = sig.innerText;
     
     if(input) {
-      input.addEventListener('input', (e) => {
+      const atualizarMascara = () => {
         let val = input.value;
         
-        // Máscara de Telefone Ultra-leve
-        if (c === 'telefone') {
+        // Máscara dinâmica para telefone e telefone2
+        if (c.includes('telefone')) {
           val = val.replace(/\D/g, '').substring(0, 11);
           val = val.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{4,5})(\d{4})$/, '$1-$2');
           input.value = val; 
@@ -89,44 +87,28 @@ border-radius:2px;
         }
         
         sig.innerText = val || textoPadrao;
-      });
+      };
+
+      input.addEventListener('input', atualizarMascara);
+      
+      // Força a aplicação da máscara no valor padrão (ex: telefone da clínica) ao carregar a página
+      if(input.value) atualizarMascara(); 
     }
   });
-html2canvas(document.getElementById("assinatura"), {
-    scale: 2,
-    backgroundColor: null,
-    useCORS: true
-})
-.then(canvas => {
-    const a = document.createElement("a");
-    a.download = "assinatura_email.png";
-    a.href = canvas.toDataURL("image/png");
-    a.click();
-});
-document.getElementById("btn-download").onclick = () => {
 
-    console.log("Clique detectado");
-
-    const assinatura = document.getElementById("assinatura");
-    console.log(assinatura);
-
-    html2canvas(assinatura, {
+  // Evento de clique para baixar limpo (resolve o bug do download automático)
+  document.getElementById("btn-download").onclick = () => {
+    html2canvas(document.getElementById("assinatura"), {
+        scale: 2,
         backgroundColor: null,
-        scale: 2
-    })
-    .then(canvas => {
-        console.log("Canvas criado");
-
+        useCORS: true
+    }).then(canvas => {
         const a = document.createElement("a");
         a.download = "assinatura_email.png";
         a.href = canvas.toDataURL("image/png");
         a.click();
-    })
-    .catch(err => {
-        console.error(err);
     });
-
-};
+  };
 </script>
 </body>
 </html>

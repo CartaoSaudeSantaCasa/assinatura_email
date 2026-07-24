@@ -66,7 +66,7 @@
   <input type="text" id="in-cargo" placeholder="Cargo Ocupado | Setor">
   <input type="text" id="in-produto" placeholder="Produto Atendido" value="Cartão Saúde Santa Casa">
   <input type="text" id="in-telefone" placeholder="Telefone Principal (só números)">
-  <input type="text" id="in-telefone2" placeholder="Telefone Comercial (só números)" value="3832120000">
+  <input type="text" id="in-telefone2" placeholder="Telefone Comercial (só números)" value="3832297960">
   <input type="text" id="in-email" placeholder="e-mail@empresa.com.br">
   <input type="text" id="in-endereco" placeholder="Endereço" value="Sede Montes Claros - MG">
 </div>
@@ -136,7 +136,7 @@
         val = val.replace(/\D/g, '').substring(0, 11);
         val = val.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{4,5})(\d{4})$/, '$1-$2');
         input.value = val;
-        sig.innerText = val ? `+55 ${val}` : textoPadrao;
+        sig.innerText = val ? `${val}` : textoPadrao;
       } else if (c === 'email') {
         const partes = val.split('@');
         sig.innerText = partes[0] || 'e-mail';
